@@ -1,0 +1,26 @@
+{
+  "name": "Covid19_Moving_Averages",
+  "version": "1.0.0",
+  "description": "Covid19 Moving Averages",
+  "author": "Tyler Otto",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.10.3",
+    "apexcharts": "^3.19.2",
+    "d3": "^5.11.0",
+    "echarts": "^4.2.1",
+    "moving-averages": "^4.0.5",
+    "nuxt": "^2.0.0",
+    "vue-apexcharts": "^1.5.3",
+    "vue-echarts": "^4.0.3"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.0.0"
+  }
+}
