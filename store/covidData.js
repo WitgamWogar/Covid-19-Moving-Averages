@@ -12,7 +12,10 @@ export const actions = {
     async getTimeSeriesForCountry ({ commit }, countrySlug) {
         let today = new Date().toISOString().slice(0, 10);
         return await this.$axios
-            .get(`https://api.covid19api.com/total/country/${countrySlug}/status/confirmed?from=2020-03-15T00:00:00Z&to=${today}`);
+            .get(
+                `https://api.covid19api.com/total/country/${countrySlug}/status/confirmed?from=2020-03-15T00:00:00Z&to=${today}`,
+                {timeout: 5000}
+            );
         
     },
 }

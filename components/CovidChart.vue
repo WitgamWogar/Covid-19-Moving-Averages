@@ -14,10 +14,15 @@
                 :options="chartOptions"
                 :series="series">
         </apexchart>
+        <v-progress-linear
+                v-else
+                indeterminate
+                color="info"
+        ></v-progress-linear>
 
-        <v-snackbar v-model="noData" color="info">
-            Interesting, there doesn't seem to be any data for this country.
-            <v-btn text @click="noData = false">Close</v-btn>
+        <v-snackbar v-model="hasError" color="info">
+            {{ errorMessage }}
+            <v-btn text @click="hasError = false">Close</v-btn>
         </v-snackbar>
     </div>
 </template>
@@ -38,7 +43,8 @@
                 dataReady: false,
                 fetchedDatasets: {},
                 series: [],
-                noData: false,
+                hasError: false,
+                errorMessage: null,
                 selectedSmas: [],
                 smaOptions: [10, 25, 50, 100],
                 chartOptions: {
@@ -89,6 +95,7 @@
         methods: {
             buildCountryData() {
                 this.dataReady = false;
+                this.setError(false);
                 let total = {name: 'Total Cases', data: []};
                 let daily = {name: 'Daily Cases', data: []};
                 let sma10 = {name: 'SMA 10', data: []};
@@ -98,7 +105,12 @@
 
                 this.$store.dispatch('covidData/getTimeSeriesForCountry', this.currentCountry).then(r => {
                     let rawData = [];
-                    this.noData = !r.data.length;
+                    if (!r.data.length) {
+                        this.setError(
+                            true,
+                            "Interesting, there doesn't seem to be any data for this country."
+                        );
+                    }
 
                     r.data.forEach((record) => {
                         let prevCases = total.data.length
@@ -127,6 +139,8 @@
                     if (this.$refs.chart) {
                         this.$refs.chart.updateSeries(this.series, true);
                     }
+                }).catch((error) => {
+                    this.setError(true, `The Covid API has encountered an error: ${error}`);
                 });
             },
             generateSmaData (dataSet) {
@@ -136,6 +150,10 @@
                     sma50: sma(dataSet, 50),
                     sma100: sma(dataSet, 100),
                 }
+            },
+            setError(hasError, message = "") {
+              this.hasError = hasError;
+              this.errorMessage = message;
             },
         },
         mounted() {
