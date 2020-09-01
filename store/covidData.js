@@ -2,7 +2,7 @@ import {count} from "echarts/src/component/dataZoom/history";
 
 export const state = () => ({
     countries: [],
-    currentCountry: null,
+    currentCountry: 'united-states',
 })
 
 export const actions = {
@@ -21,4 +21,13 @@ export const mutations = {
     setCurrentCountry(state, country) {
         state.currentCountry = country;
     },
+    setCountries(state, countries) {
+        state.countries = countries;
+    },
+}
+
+export const getters = {
+    getCurrentCountry: (state) => {
+        return state.currentCountry;
+    }
 }

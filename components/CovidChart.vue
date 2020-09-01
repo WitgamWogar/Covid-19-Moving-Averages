@@ -1,6 +1,11 @@
 <template>
     <div class="pl-4 pr-4">
-        <h1 class="text-center">Daily Covid-19 Cases for The United States</h1>
+        <v-row justify="center">
+            <v-col cols="3">
+                <country-select></country-select>
+            </v-col>
+        </v-row>
+
         <apexchart
                 v-if="dataReady"
                 height="550px"
@@ -9,6 +14,11 @@
                 :options="chartOptions"
                 :series="series">
         </apexchart>
+
+        <v-snackbar v-model="noData" color="info">
+            Interesting, there doesn't seem to be any data for this country.
+            <v-btn text @click="noData = false">Close</v-btn>
+        </v-snackbar>
     </div>
 </template>
 
@@ -16,16 +26,19 @@
     import {mapState} from 'vuex';
     import MainHeader from "../components/MainHeader";
     import { sma } from 'moving-averages';
+    import CountrySelect from "./CountrySelect";
 
     export default {
         components: {
             MainHeader,
+            CountrySelect,
         },
         data() {
             return {
                 dataReady: false,
                 fetchedDatasets: {},
                 series: [],
+                noData: false,
                 selectedSmas: [],
                 smaOptions: [10, 25, 50, 100],
                 chartOptions: {
@@ -65,7 +78,7 @@
         },
         watch: {
             currentCountry() {
-                this.handleCountryChange();
+                this.buildCountryData();
             }
         },
         computed: {
@@ -74,7 +87,8 @@
             }),
         },
         methods: {
-            handleCountryChange() {
+            buildCountryData() {
+                this.dataReady = false;
                 let total = {name: 'Total Cases', data: []};
                 let daily = {name: 'Daily Cases', data: []};
                 let sma10 = {name: 'SMA 10', data: []};
@@ -84,6 +98,7 @@
 
                 this.$store.dispatch('covidData/getTimeSeriesForCountry', this.currentCountry).then(r => {
                     let rawData = [];
+                    this.noData = !r.data.length;
 
                     r.data.forEach((record) => {
                         let prevCases = total.data.length
@@ -102,15 +117,17 @@
                         sma100.data.push({x: record.Date, y: smaData.sma100});
                     });
                     this.dataReady = true;
+                    this.series = [
+                        daily,
+                        sma10,
+                        sma25,
+                        sma50,
+                        sma100,
+                    ];
+                    if (this.$refs.chart) {
+                        this.$refs.chart.updateSeries(this.series, true);
+                    }
                 });
-
-                this.series = [
-                    daily,
-                    sma10,
-                    sma25,
-                    sma50,
-                    sma100,
-                ];
             },
             generateSmaData (dataSet) {
                 return {
@@ -122,7 +139,7 @@
             },
         },
         mounted() {
-            this.$store.commit('covidData/setCurrentCountry', 'united-states');
+            this.buildCountryData();
         },
     }
 </script>

@@ -8,14 +8,12 @@
 <script>
     import MainHeader from "../components/MainHeader";
     import CovidChart from "../components/CovidChart";
-    import CountryList from "../components/CountryList";
 
 
     export default {
         components: {
             MainHeader,
             CovidChart,
-            CountryList,
         },
     }
 </script>
