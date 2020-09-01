@@ -1,7 +1,6 @@
 <template>
     <div>
         <main-header></main-header>
-
         <covid-chart></covid-chart>
     </div>
 </template>

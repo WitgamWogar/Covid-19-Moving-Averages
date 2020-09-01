@@ -1,8 +1,9 @@
 <template>
-    <div>
+    <div class="pl-4 pr-4">
+        <h1 class="text-center">Daily Covid-19 Cases for The United States</h1>
         <apexchart
                 v-if="dataReady"
-                height="500px"
+                height="550px"
                 ref="chart"
                 type="line"
                 :options="chartOptions"
