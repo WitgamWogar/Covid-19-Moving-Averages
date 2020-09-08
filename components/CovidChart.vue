@@ -1,10 +1,10 @@
 <template>
     <div class="pl-4 pr-4">
         <v-row justify="center">
-            <v-col cols="3">
+            <v-col cols="12" md="3">
                 <country-select></country-select>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="12" md="3">
                 <v-select
                         :items="dataTypes"
                         v-model="dataType"
