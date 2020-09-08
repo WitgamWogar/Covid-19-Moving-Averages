@@ -1,12 +1,13 @@
 <template>
-    <v-select
-            :items="countries"
+    <v-autocomplete
             v-model="currentCountry"
-            label="Country"
+            :items="countries"
             item-text="Country"
             item-value="Slug"
+            label="Country"
+            placeholder="Start typing to Search"
             solo
-    ></v-select>
+    ></v-autocomplete>
 </template>
 
 <script>
