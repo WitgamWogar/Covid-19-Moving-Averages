@@ -9,11 +9,11 @@ export const actions = {
     async getCountries () {
         return await this.$axios.get(`https://api.covid19api.com/countries`);
     },
-    async getTimeSeriesForCountry ({ commit }, countrySlug) {
+    async getTimeSeriesForCountry ({ commit }, requestData) {
         let today = new Date().toISOString().slice(0, 10);
         return await this.$axios
             .get(
-                `https://api.covid19api.com/total/country/${countrySlug}/status/confirmed?from=2020-03-15T00:00:00Z&to=${today}`,
+                `https://api.covid19api.com/total/country/${requestData.country}/status/${requestData.dataType}?from=2020-03-15T00:00:00Z&to=${today}`,
                 {timeout: 5000}
             );
         

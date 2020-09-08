@@ -4,6 +4,15 @@
             <v-col cols="3">
                 <country-select></country-select>
             </v-col>
+            <v-col cols="3">
+                <v-select
+                        :items="dataTypes"
+                        v-model="dataType"
+                        label="Date Type"
+                        @change="buildCountryData"
+                        solo
+                ></v-select>
+            </v-col>
         </v-row>
 
         <apexchart
@@ -41,12 +50,15 @@
         data() {
             return {
                 dataReady: false,
-                fetchedDatasets: {},
                 series: [],
                 hasError: false,
                 errorMessage: null,
-                selectedSmas: [],
                 smaOptions: [10, 25, 50, 100],
+                dataTypes: [
+                    {text: 'Confirmed Cases', value: 'confirmed'},
+                    {text: 'Deaths', value: 'deaths'},
+                ],
+                dataType: 'confirmed',
                 chartOptions: {
                     chart: {
                         id: 'vuechart-example',
@@ -79,7 +91,6 @@
                         theme: 'dark',
                     },
                 },
-                activities: []
             };
         },
         watch: {
@@ -102,8 +113,12 @@
                 let sma25 = {name: 'SMA 25', data: []};
                 let sma50 = {name: 'SMA 50', data: []};
                 let sma100 = {name: 'SMA 100', data: []};
+                let requestData = {
+                    country: this.currentCountry,
+                    dataType: this.dataType,
+                };
 
-                this.$store.dispatch('covidData/getTimeSeriesForCountry', this.currentCountry).then(r => {
+                this.$store.dispatch('covidData/getTimeSeriesForCountry', requestData).then(r => {
                     let rawData = [];
                     if (!r.data.length) {
                         this.setError(
